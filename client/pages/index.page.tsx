@@ -1,13 +1,46 @@
+import type { WithAuthenticatorProps } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 import type { TaskEntity } from 'api/@types/task';
+import { Amplify } from 'aws-amplify';
 import { Loading } from 'components/Loading/Loading';
 import { BasicHeader } from 'pages/@components/BasicHeader/BasicHeader';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { apiClient } from 'utils/apiClient';
 import { returnNull } from 'utils/returnNull';
+import awsConfig from '../src/aws-exports';
 import styles from './index.module.css';
 
-const Home = () => {
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      identityPoolId: awsConfig.aws_cognito_identity_pool_id,
+      // overwrite the endpoint to local server
+      userPoolEndpoint: 'http://localhost:31577/api',
+      allowGuestAccess: true,
+      userAttributes: {
+        email: {
+          required: true,
+        },
+      },
+      userPoolClientId: awsConfig.aws_user_pools_web_client_id,
+      userPoolId: awsConfig.aws_user_pools_id,
+      mfa: {
+        status: 'off',
+        totpEnabled: false,
+        smsEnabled: true,
+      },
+      loginWith: {
+        username: true,
+        email: false,
+        phone: false,
+      },
+    },
+  },
+});
+
+const Home = ({ signOut, user }: WithAuthenticatorProps) => {
   const [tasks, setTasks] = useState<TaskEntity[]>();
   const [label, setLabel] = useState('');
   const inputLabel = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +81,8 @@ const Home = () => {
       <BasicHeader />
       <div className={styles.container}>
         <div className={styles.title}>Welcome to frourio!</div>
-
+        <h2>hi! {user?.username}</h2>
+        <button onClick={signOut}>Sign out</button>
         <div className={styles.main}>
           <div className={styles.card}>
             <form onSubmit={createTask}>
@@ -84,4 +118,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withAuthenticator(Home);
