@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-magnito-dev-c0038-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267324969:role/amplify-magnito-dev-c0038-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267324969:role/amplify-magnito-dev-c0038-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-magnito-dev-c0038-deployment",
+      "UnauthRoleName": "amplify-magnito-dev-c0038-unauthRole",
+      "StackName": "amplify-magnito-dev-c0038",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:533267324969:stack/amplify-magnito-dev-c0038/d512a880-175a-11ef-be0e-0a0570870023",
+      "AmplifyAppId": "d3tx3ssg648pul"
+    },
+    "categories": {
+      "auth": {
+        "magnitoff342501": {}
+      }
+    }
+  }
+}
