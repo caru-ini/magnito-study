@@ -1,19 +1,18 @@
-import type { FastifyInstance, FastifyPluginOptions } from 'fastify';
+import type { FastifyInstance, FastifyPluginOptions, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-
-interface Options extends FastifyPluginOptions {
-  parser?: () => any;
-  bodyLimit?: number;
-}
 
 type NextFunction = (err?: Error) => void;
 
-export const fastifyAmzJson = (fastify: FastifyInstance, options: Options, next: NextFunction) => {
+export const fastifyAmzJson = (
+  fastify: FastifyInstance,
+  options: FastifyPluginOptions,
+  next: NextFunction,
+): void => {
   const contentParser = (
-    req: any,
+    req: FastifyRequest,
     body: Buffer,
-    done: (err: Error | null, result?: any) => void,
-  ) => {
+    done: (err: Error | null, result?: string) => void,
+  ): void => {
     done(null, JSON.parse(body.toString()));
   };
 
@@ -23,5 +22,4 @@ export const fastifyAmzJson = (fastify: FastifyInstance, options: Options, next:
 
 export default fp(fastifyAmzJson, {
   fastify: '4.x',
-  name: '@fastify/amzJson',
 });
