@@ -17,7 +17,7 @@ Amplify.configure({
     Cognito: {
       identityPoolId: awsConfig.aws_cognito_identity_pool_id,
       // overwrite the endpoint to local server
-      userPoolEndpoint: 'http://localhost:31577/api',
+      userPoolEndpoint: 'http://127.0.0.1:31577/api/auth',
       allowGuestAccess: true,
       userAttributes: {
         email: {
@@ -39,6 +39,8 @@ Amplify.configure({
     },
   },
 });
+
+// Amplify.configure(awsConfig);
 
 const Home = ({ signOut, user }: WithAuthenticatorProps) => {
   const [tasks, setTasks] = useState<TaskEntity[]>();
