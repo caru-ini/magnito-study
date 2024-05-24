@@ -15,7 +15,7 @@ import styles from './index.module.css';
 Amplify.configure({
   Auth: {
     Cognito: {
-      identityPoolId: awsConfig.aws_cognito_identity_pool_id,
+      identityPoolId: 'localhost:31577:fake',
       // overwrite the endpoint to local server
       userPoolEndpoint: 'http://127.0.0.1:31577/api/auth',
       allowGuestAccess: true,
@@ -24,7 +24,7 @@ Amplify.configure({
           required: true,
         },
       },
-      userPoolClientId: awsConfig.aws_user_pools_web_client_id,
+      userPoolClientId: 'localhost:31577:fake',
       userPoolId: awsConfig.aws_user_pools_id,
       mfa: {
         status: 'off',

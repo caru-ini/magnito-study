@@ -9,13 +9,50 @@ import type {
   respondToAuthChallengeEntity,
   respondToAuthChallengeResponse,
 } from 'api/@types/auth';
+import { randomUUID } from 'crypto';
 
 import jwt from 'jsonwebtoken';
 
+const getFakeAccessToken = (): string =>
+  jwt.sign(
+    {
+      sub: randomUUID(),
+      iss: 'http://localhost:3000',
+      client_id: 'client_id',
+      origin_jti: 'origin_jti',
+      event_id: 'event_id',
+      token_use: 'access',
+      scope: 'aws.cognito.signin.user.admin',
+      auth_time: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+      iat: Math.floor(Date.now() / 1000),
+      jti: 'jti',
+      username: 'test',
+    },
+    'secret',
+  );
+
+const getFakeIdToken = (): string =>
+  jwt.sign(
+    {
+      sub: randomUUID(),
+      email_verified: true,
+      iss: 'http://localhost:3000',
+      'cognito:username': 'test',
+      aud: 'client_id',
+      event_id: 'event_id',
+      token_use: 'id',
+      auth_time: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+      iat: Math.floor(Date.now() / 1000),
+      jti: 'jti',
+      email: 'example@example.com',
+    },
+    'secret',
+  );
 export const authUseCase = {
   initiateAuth: (entity: initiateAuthEntity): initiateAuthResponse => {
     // mock response
-    console.log('initiateAuth', entity);
     return {
       ChallengeName: 'PASSWORD_VERIFIER',
       ChallengeParameters: {
@@ -31,12 +68,11 @@ export const authUseCase = {
   authChallenge: (entity: respondToAuthChallengeEntity): respondToAuthChallengeResponse => {
     // mock response
     const secret = 'secret';
-    console.log('authChallenge', entity);
     return {
       AuthenticationResult: {
-        AccessToken: jwt.sign({ email: 'example@example.com' }, secret, { expiresIn: '3600' }),
+        AccessToken: getFakeAccessToken(),
         ExpiresIn: 3600,
-        IdToken: jwt.sign({ sub: 'sub' }, secret, { expiresIn: '3600' }),
+        IdToken: getFakeIdToken(),
         RefreshToken: jwt.sign({ sub: 'sub' }, secret, { expiresIn: '3600' }),
         TokenType: 'Bearer',
       },
@@ -47,7 +83,6 @@ export const authUseCase = {
 
   getId: (entity: getIdEntity): getIdResponse => {
     // mock response
-    console.log('getId', entity);
     return {
       IdentityId: 'identityId',
     };
@@ -57,7 +92,6 @@ export const authUseCase = {
     entity: getCredentialsForIdentityEntity,
   ): getCredentialsForIdentityResponse => {
     // mock response
-    console.log('getCredentialsForIdentity', entity);
     return {
       Credentials: {
         AccessKeyId: 'ASIA',
@@ -75,7 +109,6 @@ export const authUseCase = {
 
   getUser: (entity: { AccessToken: string }): getUserResponse => {
     // mock response
-    console.log('getuser', entity);
     return {
       UserAttributes: [
         { Name: 'email', Value: 'example@example.com' },
